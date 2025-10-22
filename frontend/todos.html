@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
+    <title>TODOS</title>
+</head>
+<body>
+    <header>
+        <div>TODOS PROJECT</div>
+        <nav>
+            <a href="https://github.com/VadimVereshack">MY GIT</a>
+            <a id="logout" href="">Вийти</a>
+        </nav>
+    </header>
+
+    <div id="error">
+        <label></label>
+    </div>
+
+    <div id="wrapper">
+        <div id="container">
+            <div id="authorization">
+                <a>Для початку роботи, авторизуйтесь!</a>
+                <form method="POST">
+                    <label for="login">Логін</label>
+                    <input type="text" id="login_input" name="login" required>
+                    <label for="passworf">Пароль</label>
+                    <input type="password" id="password_input" name="password" required>
+                    <button type="submit" id="submit_button" value="login" formaction="/server/login">Авторизуватися</button>
+                    <button type="submit" id="submit_button" value="register"  formaction="/server/register">Зареєструватись</button>
+                </form>
+            </div>
+            <div id="todos">
+                <div id="addtodo">
+                    <form action="/server/addTodo" method="POST" id="add">
+                        <label for="todo">Введіть нове завдання</label>
+                        <input type="text" name="todo" maxlength="100">
+                        <button type="submit">Додати</button>
+                    </form>
+                </div>
+                <div class="divider"></div>
+                <div id="todos_content">
+
+
+                </div>    
+            </div>
+        </div>
+    </div>        
+</body>
+<script>
+    const authorization = document.getElementById("authorization");
+    const authForm = document.querySelector('#authorization form')
+    const logout = document.getElementById("logout");
+    const todos = document.getElementById("todos");
+    const todosContent = document.getElementById("todos_content")
+    const addInput= document.querySelector('#addtodo input');
+    const addForm = document.getElementById('add');
+
+    todos.style.display = "none" //block
+    logout.style.display = "none"; //inline
+    authorization.style.display = "none"; //block
+
+    addListenerCreateForm(addForm)
+
+    logout.addEventListener('click', () => {
+        document.cookie = `token=; path=/;`;
+        location.reload();
+    });
+
+    getTodos();
+    async function getTodos(){
+        const token = getCookie('token');
+        if(token == '' || token == null) return authorization.style.display = "block";
+        await fetch('/server/getTodos', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(res => { if (
+            res.headers.get("content-type")?.includes("application/json")) return res.json() })
+        .then(body => {
+            if (body?.error) return renderError(body.error);
+            if(body?.todos) {
+                todos.style.display = "block"
+                logout.style.display = "inline";
+                authorization.style.display = "none";
+                return renderingTodos(body?.todos);
+            }
+        })
+        .catch(error => {
+            console.log(error);
+            renderError("Помилка серверу");
+        });
+    }
+
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    function renderingTodos(todos){
+        let idsArray = []
+        let contentTodosText = '';
+        todos.forEach(todo =>{
+            const todoHTML = `
+                            <div class="todo" id="todo_${todo._id}"}>
+                                <div id="wrapperTodoBlockElements" ${todo.mark ? 'class="markTodo"' : ""}></div>
+                            </div>`
+                idsArray[idsArray.length] = todo._id;
+                contentTodosText += todoHTML;
+
+            })
+            todosContent.innerHTML = contentTodosText;
+            addTodoBlocks(todos);
+    }
+
+    function addTodoBlocks(todos){
+        todos.forEach(todo =>{
+            addTodoBlock(todo);
+            });
+    }
+
+    function addTodoBlock(todo){
+        const blockTodo = document.querySelector(`#todo_${todo._id} #wrapperTodoBlockElements`); 
+            const htmlTodoBlock = `
+                                <div id="todoTextBlock">
+                                    <label for="">${todo.todo}</label>
+                                </div>               
+                                <div id="buttonsBlock">
+                                    <button name="mark" formaction="/server/markTodo/${todo._id}" title="Маркер">🏷️</button>
+                                    <button name="delete" formaction="/server/deleteTodo/${todo._id}" title="Видалити">🗑️</button>
+                                    <button name="edit" title="Редагувати">🔖</button>
+                                </div>`
+            blockTodo.innerHTML = htmlTodoBlock;
+            addListenersButton(todo._id, "mark");
+            addListenersButton(todo._id, "delete");
+            const btnEdit = document.querySelector(`#todo_${todo._id} button[name="edit"]`);
+            btnEdit.addEventListener("click", ()=>{
+                const editBlock = `
+                                <div id="todoTextBlock">
+                                     <input type="text" name="todo" maxlength="100" value="${todo.todo}">
+                                </div>   
+                                <div id="buttonsBlock">
+                                    <button name="save" formmethod="POST" formaction="/server/editTodo/${todo._id}" title="Зберегти">✅</button>
+                                    <button name="cansel" title="Відмінити редагування">❌</button>
+                                </div>`
+                blockTodo.innerHTML = editBlock; 
+                const btnSave = document.querySelector(`#todo_${todo._id} button[name="save"]`);
+                btnSave.addEventListener("click", async (e) =>{
+                    const input = document.querySelector(`#todo_${todo._id} input[name="todo"]`);
+                    const action = btnSave.formAction;
+                    const method = btnSave.formMethod;
+                    e.preventDefault();
+                    await fetch(action, {
+                        method: method,
+                        body: JSON.stringify({todo: input.value}),
+                        headers: {'Content-Type': 'application/json'}
+                    })
+                    .then(res => { if (res.headers.get("content-type")?.includes("application/json")) return res.json() })
+                    .then(body => {
+                        if (body?.error) return renderError(body.error);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        renderError("Помилка серверу");
+                    });
+                    getTodos();
+                });
+                const btnCansel = document.querySelector(`#todo_${todo._id} button[name="cansel"]`);
+                btnCansel.addEventListener("click", ()=>{
+                    addTodoBlock(todo);
+                });
+            });
+    }
+
+    function addListenersButton(id, buttonName){
+            const btn = document.querySelector(`#todo_${id} button[name="${buttonName}"]`); 
+            const action = btn.formAction;
+            btn.addEventListener("click", async (e) =>{
+                e.preventDefault();
+                await fetch(action, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                })
+                .then(res => { if (res.headers.get("content-type")?.includes("application/json")) return res.json() })
+                .then(body => {
+                    if (body?.error) return renderError(body.error);
+                })
+                .catch(error => {
+                    console.log(error);
+                    renderError("Помилка серверу");
+                });
+                getTodos();
+            })
+    }
+
+    function addListenerCreateForm(form){
+        form.addEventListener('submit', async (e) => {
+        const addInput= document.querySelector('#addtodo input');
+        e.preventDefault();
+        const formData = new FormData(form);
+        const params = new URLSearchParams(formData);
+        if(addInput.value.trim() == "") return renderError("Поле не може бути пустим");
+        await fetch(form.action, {
+            method: form.method,
+            body: params,
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        })
+        .then(res => { if (res.headers.get("content-type")?.includes("application/json")) return res.json() })
+        .then(body => {
+            if (body?.error) return renderError(body.error);
+        })
+        .catch(error => {
+            console.log(error);
+            renderError("Помилка серверу");
+        });
+        form.reset();
+        getTodos();
+    });
+    }
+
+    authForm.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+        e.preventDefault();
+        }
+    });
+
+    authForm.addEventListener('submit', async e =>{
+        e.preventDefault();
+        const formData = new FormData(authForm);
+        const params = new URLSearchParams(formData);
+        const action = e.submitter?.formAction || form.action;
+        await authFetch(action, formData.method, params, e.submitter.value);
+        authForm.reset();
+    })
+
+    async function authFetch(action, method, params, value){
+        await fetch(action, {
+            method: authForm.method,
+            body: params,
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        })
+        .then(res => { if (res.headers.get("content-type")?.includes("application/json")) return res.json() })
+        .then(async function (body) {
+            if (body?.error) return renderError(body.error);
+            if (value == 'register') {
+                return await authFetch('/server/login', method, params, 'login');
+            }
+            if(value == 'login'){
+                if(body?.token) document.cookie = `token=${body.token}; path=/; max-age=3600; SameSite=Strict`;
+                location.reload();
+            }
+        })
+        .catch(error => {
+            console.log(error);
+            renderError("Помилка серверу");
+        });
+    }
+
+    
+    function renderError(errorText){
+        const errorBlock = document.getElementById("error");
+        const errorLabel = document.querySelector("#error label")
+        error.style.display = "flex";
+        errorLabel.innerText = errorText; 
+        setTimeout(() => {
+            error.style.display = "none";
+        }, 4000)
+    }
+
+
+</script>
+</html>

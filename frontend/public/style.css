@@ -1,0 +1,362 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    height: 55px;
+    background: #9c0f0f;
+    color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.divider{
+    display: block;
+    margin: 15px auto;
+    width: 95%;
+    height: 1px;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+#error{
+    background-color: #9c0f0f;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+#error label{
+    font-weight: bold;
+    font-size: 30px;
+    color: #fff;
+}
+
+header div, header nav, header a {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+header #loguot{
+    font-weight: bold;
+}
+
+header a:hover{
+    color: #ffffffd7;
+    cursor: pointer;
+}
+
+#wrapper{
+    display: flex;
+    justify-content: center;  
+    align-items: center;    
+    padding-top: 8vh;  
+}
+
+#container{
+    background-color: white;
+    width: 70%;
+    padding: 35px;
+    border-radius: 7px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+#authorization{
+    display: none;
+    text-align: center;
+}
+
+#authorization a{
+    font-weight: bold;
+    display: block;
+    font-size: 21px;
+    margin-bottom: 22px;
+}
+
+#authorization label{
+    display: block;
+    color: #000000;
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 18px;
+    margin-bottom: 3px;
+}
+
+#authorization input{
+    display: block;
+    margin: 0 auto;
+    width: 310px;
+    height: 35px;
+    border: 1px solid #9c0f0f80;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 15px;
+    color: #9c0f0f;
+    padding: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+#authorization input:focus {
+    outline: none;
+    border: 1px solid #9c0f0f;
+    background-color: #00000001;
+}
+
+#authorization button {
+    margin: 22px 5px 5px 5px;
+    font-weight: bold;
+    font-size: 14px;
+    width: 150px;
+    height: 35px;
+    border: 1px solid rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+    background-color: #9c0f0f;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+#authorization button:hover {
+    background-color: #9c0f0fca;
+    cursor: pointer;
+}
+
+#authorization button:active {
+    transform: scale(0.99);
+}
+
+#todos #addtodo{
+    text-align: center;
+}
+
+#todos #addtodo label{
+    font-weight: bold;
+    display: block;
+    font-size: 18px;
+    margin-bottom: 6px;
+    color: #000000ca;
+}
+
+#todos #addtodo input{
+    width: 80%;
+    height: 30px;
+    font-size: 15px;
+    border: 1px solid #9c0f0f80;
+    color: #9c0f0f;
+    padding: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+#todos #addtodo input:focus {
+    outline: none;
+    border: 1px solid #9c0f0f;
+    background-color: #00000001;
+}
+
+#todos #addtodo button{
+    width: 15%;
+    height: 30px;
+    font-size: 15px;
+    border: 1px solid rgba(0, 0, 0, 0.7);
+    background-color: #9c0f0f;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+#todos #addtodo button:hover {
+    background-color: #9c0f0fca;
+    cursor: pointer;
+}
+
+#todos #addtodo button:active {
+    transform: scale(0.99);
+}
+
+.markTodo{
+    background-color: #9c0f0f1d;
+}
+
+.todo{
+    display: block;
+    padding: 10px;   
+    background-color: #fefefe15;
+    width: 95%;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    height: 125px;
+    box-shadow: 0 3px 3px rgba(0,0,0,0.1);
+}
+
+.todo label{
+    word-break: break-all;
+    word-wrap: break-word;
+    display: block;
+    margin-bottom: 5px;
+    font-size: 18px;
+    margin-left: 10px;
+    margin-right: 10px;
+    color:#373737
+}
+
+.todo input{
+    width: 95%;
+    height: 40px;
+    margin-bottom: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+    word-break: break-all;
+    word-wrap: break-word;
+    display: block;
+    font-size: 16px;
+    color:#373737;
+    border: 0px;
+    padding: 10px;
+    background-color: #00000010;
+}
+
+.todo input:focus{
+    outline: none;
+    background-color: #00000015;
+}
+
+#wrapperTodoBlockElements{
+    display: flex;
+    width: 100%;
+}
+
+#todoTextBlock{
+    flex: 1;
+}
+
+#buttonsBlock{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+#buttonsBlock button{
+    font-size: 17px;
+    right: 0px;
+    margin-bottom: 5px;
+    border: 0px;
+    background-color: #00000000;
+}
+
+#buttonsBlock button:hover {
+    font-size: 22px;
+    cursor: pointer;
+}
+
+#buttonsBlock button:active {
+    transform: scale(0.99);
+}
+
+@media (max-width: 768px) {
+    header {
+        height: 65px;
+    }
+    #wrapper{
+        padding-top: 5vh;
+    }
+    #container{
+        background-color: rgba(255, 255, 255, 0);
+        width: 100%;
+        padding: 0px;
+        box-shadow: none;
+    }
+    .todo label {
+        font-size: 15px;
+    }
+    header div, header nav, header a{
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+    #error{
+        top: 0px;
+    }
+    #error label{
+        font-size: 25px;
+    }
+}
+@media (max-width: 500px) {
+    #todos #addtodo button{
+        width: 25%;
+    }
+    #todos #addtodo input{
+        width: 70%;
+    }
+    #authorization a{
+        font-size: 18px
+    }
+    #authorization input{
+        width: 250px;
+        height: 30px;
+    }
+    #authorization button{
+        font-size: 12px;
+        width: 120px;
+        height: 40px;
+    }
+    header div, header nav, header a{
+        font-size: 15px;
+    }
+    .todo label {
+        font-size: 13px;
+    }
+    #error label{
+        font-size: 20px;
+    }
+}
+@media (max-width: 370px) {
+    .todo {
+        height: 150px;
+    }
+    #wrapper{
+        padding-top: 3vh;
+    }
+    #authorization a{
+        font-size: 16px
+    }
+    header div, header nav, header a{
+        font-size: 12px;
+        margin-left: 3px;
+        margin-right: 3px;
+    }
+    #error label{
+        font-size: 15px;
+    }
+}
+@media (max-width: 280px) {
+    #todos #addtodo label{
+        font-size: 15px;
+    }
+    #authorization a{
+        font-size: 18px
+    }
+    #authorization input{
+        width: 180px;
+        height: 30px;
+    }
+    #authorization button{
+        font-size: 10px;
+        width: 100px;
+        height: 40px;
+    }
+    header div, header nav, header a{
+        font-size: 15px;
+    }
+    header div, header nav, header a{
+        font-size: 10px;
+    }
+}

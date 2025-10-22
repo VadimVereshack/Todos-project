@@ -1,9 +1,10 @@
 module.exports = {
     PORT: 3000,
-    DATABASE: { URI: '-',
-                NAME: 'DataBase',
-                COLLECTION_USERS: 'Users',
-                COLLECTION_TODOS: 'Todos'
+    URL: "127.0.0.1",
+    DATABASE: { URI: '',
+                NAME: '',
+                COLLECTION_USERS: '',
+                COLLECTION_TODOS: ''
     },
     JWT: {
         SECRET: "TEST",

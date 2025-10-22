@@ -1,7 +1,15 @@
-const constructor = require('./htmlConstructor.js');
+const fs  = require('fs');
+const path = require('path');
 
-function getMainHtml(req, res){
-    res.send(constructor.todosPage());
+function renderHtml(req, res){
+    res.send(loadHtml());
 }
 
-module.exports = {getMainHtml}
+function loadHtml(){
+    const filePath = path.join(process.cwd(), 'frontend', 'todos.html');
+    let html = fs.readFileSync(filePath, 'utf8');
+    return html;
+}
+
+
+module.exports = {renderHtml}

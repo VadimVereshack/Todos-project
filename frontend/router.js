@@ -1,7 +1,7 @@
 const { Router } = require('express');
-const { getMainHtml } = require('./service.js');
+const { renderHtml } = require('./service.js');
 const router = Router();
 
-router.get("/", getMainHtml);
+router.get("/", renderHtml);
 
 module.exports = router;
